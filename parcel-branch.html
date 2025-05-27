@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AJR Branch List</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 2rem;
       background: #f8f9fa;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
     }
     h2 {
       background: #007BFF;
@@ -33,21 +37,33 @@
       border: none;
       border-radius: 3px;
     }
-    #search {
+    #search, #regionFilter {
       padding: 0.5rem;
       width: 100%;
       max-width: 400px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
+      display: block;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 1rem;
+      display: block;
     }
   </style>
 </head>
 <body>
 
   <h1>AJR Branch List</h1>
+
   <input type="text" id="search" placeholder="Search branches..." />
+
+  <label for="regionFilter">এলাকা ভিত্তিক ফিল্টার:</label>
+  <select id="regionFilter">
+    <option value="All">All</option>
+  </select>
 
   <div id="branches"></div>
 
@@ -55,17 +71,28 @@
   <script>
     const csvUrl = 'https://ahoshanur.github.io/ajr/parcel-branch.csv';
     let allBranches = [];
+    let allRegions = new Set();
 
     function fuzzyMatch(a, b) {
       return b.toLowerCase().includes(a.toLowerCase());
     }
 
-    function renderBranches(data, query = '') {
+    function populateRegionFilter() {
+      const regionSelect = document.getElementById('regionFilter');
+      const sortedRegions = Array.from(allRegions).sort();
+      sortedRegions.forEach(region => {
+        const opt = document.createElement('option');
+        opt.value = region;
+        opt.textContent = region;
+        regionSelect.appendChild(opt);
+      });
+    }
+
+    function renderBranches(data, query = '', selectedRegion = 'All') {
       const container = document.getElementById('branches');
       container.innerHTML = '';
 
       const grouped = {};
-
       data.forEach(branch => {
         const region = branch.region.trim();
         if (!grouped[region]) grouped[region] = [];
@@ -73,6 +100,8 @@
       });
 
       Object.keys(grouped).forEach(region => {
+        if (selectedRegion !== 'All' && region !== selectedRegion) return;
+
         const branches = grouped[region].filter(b => {
           if (!query) return true;
           const target = [b.office, b.address, b.phone1, b.phone2, b.search].join(' ');
@@ -125,14 +154,23 @@
         header: true,
         complete: function(results) {
           allBranches = results.data.filter(row => row.office && row.region);
+          allBranches.forEach(row => allRegions.add(row.region.trim()));
+          populateRegionFilter();
           renderBranches(allBranches);
         }
       });
     }
 
+    document.getElementById('regionFilter').addEventListener('change', () => {
+      const region = document.getElementById('regionFilter').value;
+      const query = document.getElementById('search').value.trim();
+      renderBranches(allBranches, query, region);
+    });
+
     document.getElementById('search').addEventListener('input', e => {
-      const q = e.target.value.trim();
-      renderBranches(allBranches, q);
+      const query = e.target.value.trim();
+      const region = document.getElementById('regionFilter').value;
+      renderBranches(allBranches, query, region);
     });
 
     loadCSV();
