@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
   <title>A.J.R Parcel Branch List</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Noto Serif Bengali", serif;
       margin: 2rem;
       background: #f8f9fa;
     }
@@ -19,24 +23,26 @@
     .link-btn {
       padding: 0.5rem 1rem;
       font-size: 1rem;
-      border: 1px solid #007BFF;
+      border: 1px solid #007bff;
       background: white;
-      color: #007BFF;
+      color: #007bff;
       border-radius: 4px;
       text-decoration: none;
       font-weight: bold;
     }
     .link-btn:hover {
-      background: #007BFF;
+      background: #007bff;
       color: white;
     }
     h1 {
-      font-size: 2rem;
+      font-size: x-large;
       margin: 0;
     }
     h2 {
-      background: #007BFF;
+      background: #007bff;
+      text-align: center;
       color: white;
+      font-size: large;
       padding: 0.5rem;
       border-radius: 5px;
     }
@@ -48,6 +54,7 @@
       border-radius: 5px;
     }
     .copy-btn {
+      font-family: "Noto Serif Bengali", serif;
       margin-top: 0.5rem;
       padding: 0.3rem 0.6rem;
       font-size: 0.9rem;
@@ -64,6 +71,7 @@
       margin-bottom: 1rem;
     }
     #search {
+      font-family: "Noto Serif Bengali", serif;
       flex-grow: 1;
       padding: 0.5rem;
       font-size: 1rem;
@@ -73,9 +81,9 @@
     #regionButton {
       padding: 0.5rem 1rem;
       font-size: 1rem;
-      border: 1px solid #007BFF;
+      border: 1px solid #007bff;
       background: white;
-      color: #007BFF;
+      color: #007bff;
       border-radius: 4px;
       cursor: pointer;
       position: relative;
@@ -99,7 +107,7 @@
       cursor: pointer;
     }
     #regionMenu div:hover {
-      background: #007BFF;
+      background: #007bff;
       color: white;
     }
   </style>
@@ -107,14 +115,16 @@
 <body>
 
   <div class="title-bar">
-    <a href="https://www.facebook.com/ahoshanur" target="_blank" class="link-btn">B</a>
-    <h1>A.J.R Parcel Branch List</h1>
+    <a href="https://www.facebook.com/ahoshanur" target="_blank" class="link-btn"><i class="fa-solid fa-arrow-left"></i></a>
+    <h1>এ.জে.আর পার্সেল শাখা সমূহ</h1>
   </div>
 
+  <h3>এই সকল শাখায় শুধুমাত্র পার্সেল প্রেরণ করা যাবে</h3>
+
   <div class="top-controls">
-    <input type="text" id="search" placeholder="Search branches..." />
+    <input type="text" id="search" placeholder="সার্চ করুন...." />
     <div style="position: relative;">
-      <button id="regionButton">R</button>
+      <button id="regionButton"><i class="fa-solid fa-filter"></i></button>
       <div id="regionMenu"></div>
     </div>
   </div>
@@ -195,14 +205,14 @@
             div.appendChild(p);
           });
 
-          const button = document.createElement('button');
+           const button = document.createElement('button');
           button.className = 'copy-btn';
-          button.textContent = 'Copy Branch Details';
+          button.textContent = 'শাখার তথ্য কপি করুন';
           button.onclick = () => {
             const text = lines.join('\n');
             navigator.clipboard.writeText(text).then(() => {
-              button.textContent = 'Copied!';
-              setTimeout(() => (button.textContent = 'Copy Branch Details'), 1500);
+              button.textContent = 'কপি করা হয়েছে!';
+              setTimeout(() => (button.textContent = 'শাখার তথ্য কপি করুন'), 1500);
             });
           };
           div.appendChild(button);
