@@ -67,15 +67,14 @@
 
   <div id="branches"></div>
 
+  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuzzysort@2.0.4/fuzzysort.min.js"></script>
+
   <script>
     const csvUrl = 'https://ahoshanur.github.io/ajr/parcel-branch.csv';
     let allBranches = [];
     let allRegions = new Set();
-
-    function fuzzyMatch(a, b) {
-      return b.toLowerCase().includes(a.toLowerCase());
-    }
 
     function populateRegionFilter() {
       const regionSelect = document.getElementById('regionFilter');
@@ -102,11 +101,15 @@
       Object.keys(grouped).forEach(region => {
         if (selectedRegion !== 'All' && region !== selectedRegion) return;
 
-        const branches = grouped[region].filter(b => {
-          if (!query) return true;
-          const target = [b.office, b.address, b.phone1, b.phone2, b.search].join(' ');
-          return fuzzyMatch(query, target);
-        });
+        let branches = grouped[region];
+
+        if (query) {
+          const queryWords = query.trim().split(/\s+/);
+          branches = branches.filter(branch => {
+            const target = [branch.office, branch.address, branch.phone1, branch.phone2, branch.search].join(' ');
+            return queryWords.every(word => fuzzysort.single(word, target));
+          });
+        }
 
         if (branches.length === 0) return;
 
@@ -161,14 +164,18 @@
       });
     }
 
-    document.getElementById('regionFilter').addEventListener('change', () => {
-      const region = document.getElementById('regionFilter').value;
-      const query = document.getElementById('search').value.trim();
-      renderBranches(allBranches, query, region);
+    let debounceTimer;
+    document.getElementById('search').addEventListener('input', e => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        const query = e.target.value.trim();
+        const region = document.getElementById('regionFilter').value;
+        renderBranches(allBranches, query, region);
+      }, 200);
     });
 
-    document.getElementById('search').addEventListener('input', e => {
-      const query = e.target.value.trim();
+    document.getElementById('regionFilter').addEventListener('change', () => {
+      const query = document.getElementById('search').value.trim();
       const region = document.getElementById('regionFilter').value;
       renderBranches(allBranches, query, region);
     });
