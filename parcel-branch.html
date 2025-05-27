@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AJR Branch List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #f8f9fa;
+    }
+    h2 {
+      background: #007BFF;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 5px;
+    }
+    .branch {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+    }
+    .copy-btn {
+      margin-top: 0.5rem;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 3px;
+    }
+    #search {
+      padding: 0.5rem;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>AJR Branch List</h1>
+  <input type="text" id="search" placeholder="Search branches..." />
+
+  <div id="branches"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    const csvUrl = 'https://ahoshanur.github.io/ajr/parcel-branch.csv';
+    let allBranches = [];
+
+    function fuzzyMatch(a, b) {
+      return b.toLowerCase().includes(a.toLowerCase());
+    }
+
+    function renderBranches(data, query = '') {
+      const container = document.getElementById('branches');
+      container.innerHTML = '';
+
+      const grouped = {};
+
+      data.forEach(branch => {
+        const region = branch.region.trim();
+        if (!grouped[region]) grouped[region] = [];
+        grouped[region].push(branch);
+      });
+
+      Object.keys(grouped).forEach(region => {
+        const branches = grouped[region].filter(b => {
+          if (!query) return true;
+          const target = [b.office, b.address, b.phone1, b.phone2, b.search].join(' ');
+          return fuzzyMatch(query, target);
+        });
+
+        if (branches.length === 0) return;
+
+        const regionHeading = document.createElement('h2');
+        regionHeading.textContent = region;
+        container.appendChild(regionHeading);
+
+        branches.forEach(branch => {
+          const div = document.createElement('div');
+          div.className = 'branch';
+
+          const lines = [
+            branch.office,
+            branch.address,
+            branch.phone1,
+            branch.phone2
+          ];
+
+          lines.forEach(line => {
+            const p = document.createElement('p');
+            p.textContent = line;
+            div.appendChild(p);
+          });
+
+          const button = document.createElement('button');
+          button.className = 'copy-btn';
+          button.textContent = 'Copy';
+          button.onclick = () => {
+            const text = lines.join('\n');
+            navigator.clipboard.writeText(text).then(() => {
+              button.textContent = 'Copied!';
+              setTimeout(() => (button.textContent = 'Copy'), 1500);
+            });
+          };
+          div.appendChild(button);
+
+          container.appendChild(div);
+        });
+      });
+    }
+
+    function loadCSV() {
+      Papa.parse(csvUrl, {
+        download: true,
+        header: true,
+        complete: function(results) {
+          allBranches = results.data.filter(row => row.office && row.region);
+          renderBranches(allBranches);
+        }
+      });
+    }
+
+    document.getElementById('search').addEventListener('input', e => {
+      const q = e.target.value.trim();
+      renderBranches(allBranches, q);
+    });
+
+    loadCSV();
+  </script>
+
+</body>
+</html>
