@@ -3,16 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AJR Branch List</title>
+  <title>A.J.R Parcel Branch List</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 2rem;
       background: #f8f9fa;
     }
+    .title-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .link-btn {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #007BFF;
+      background: white;
+      color: #007BFF;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .link-btn:hover {
+      background: #007BFF;
+      color: white;
+    }
     h1 {
       font-size: 2rem;
-      margin-bottom: 1rem;
+      margin: 0;
     }
     h2 {
       background: #007BFF;
@@ -86,12 +106,15 @@
 </head>
 <body>
 
-  <h1>AJR Branch List</h1>
+  <div class="title-bar">
+    <a href="https://www.facebook.com/ahoshanur" target="_blank" class="link-btn">B</a>
+    <h1>A.J.R Parcel Branch List</h1>
+  </div>
 
   <div class="top-controls">
     <input type="text" id="search" placeholder="Search branches..." />
     <div style="position: relative;">
-      <button id="regionButton">R: All</button>
+      <button id="regionButton">R</button>
       <div id="regionMenu"></div>
     </div>
   </div>
@@ -116,7 +139,7 @@
         div.textContent = region;
         div.onclick = () => {
           selectedRegion = region;
-          document.getElementById('regionButton').textContent = `R: ${region}`;
+          document.getElementById('regionButton').textContent = `R`;
           menu.style.display = 'none';
           const query = document.getElementById('search').value.trim();
           renderBranches(allBranches, query, selectedRegion);
@@ -174,12 +197,12 @@
 
           const button = document.createElement('button');
           button.className = 'copy-btn';
-          button.textContent = 'Copy';
+          button.textContent = 'Copy Branch Details';
           button.onclick = () => {
             const text = lines.join('\n');
             navigator.clipboard.writeText(text).then(() => {
               button.textContent = 'Copied!';
-              setTimeout(() => (button.textContent = 'Copy'), 1500);
+              setTimeout(() => (button.textContent = 'Copy Branch Details'), 1500);
             });
           };
           div.appendChild(button);
