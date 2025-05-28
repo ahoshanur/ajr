@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
   <title>A.J.R Parcel Branch List</title>
   <style>
     body {
@@ -17,26 +17,29 @@
     .title-bar {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
+      position: relative;
       margin-bottom: 1rem;
+      height: 2.5rem;
     }
     .link-btn {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border: 1px solid #007bff;
-      background: white;
+      position: absolute;
+      left: 0;
+      padding: 0.25rem 0.75rem;
+      font-size: 1.2rem;
+      border: none;
+      background: none;
       color: #007bff;
-      border-radius: 4px;
       text-decoration: none;
-      font-weight: bold;
-    }
-    .link-btn:hover {
-      background: #007bff;
-      color: white;
+      display: flex;
+      align-items: center;
+      height: 100%;
     }
     h1 {
       font-size: x-large;
-      margin: 0;
+      margin: 0 auto;
+      text-align: center;
+      flex-grow: 1;
     }
     h2 {
       background: #007bff;
@@ -46,23 +49,33 @@
       padding: 0.5rem;
       border-radius: 5px;
     }
+    h3 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
     .branch {
       background: white;
       border: 1px solid #ddd;
       padding: 1rem;
       margin-bottom: 1rem;
       border-radius: 5px;
+      line-height: 1.3;
+    }
+    .branch p:first-child {
+      font-weight: bold;
+      font-size: 1.2rem;
     }
     .copy-btn {
       font-family: "Noto Serif Bengali", serif;
       margin-top: 0.5rem;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.9rem;
+      padding: 0.5rem;
+      font-size: 1rem;
       cursor: pointer;
       background: #28a745;
       color: white;
       border: none;
       border-radius: 3px;
+      width: 100%;
     }
     .top-controls {
       display: flex;
@@ -73,20 +86,27 @@
     #search {
       font-family: "Noto Serif Bengali", serif;
       flex-grow: 1;
-      padding: 0.5rem;
+      padding: 0.5rem 1rem 0.5rem 2.2rem;
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
+      background: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 512 512\'%3E%3Cpath fill=\'%23666\' d=\'M505 442.7L405.3 343c28.3-34.9 45.3-79 45.3-127C450.6 96.5 354.1 0 233.3 0S16 96.5 16 216.3s96.5 216.3 216.3 216.3c48 0 92.1-17 127-45.3L442.7 505c6.3 6.3 16.4 6.3 22.6 0l39.6-39.6c6.3-6.2 6.3-16.4.1-22.6zM233.3 360c-79.5 0-144-64.5-144-144S153.8 72 233.3 72s144 64.5 144 144-64.5 144-144 144z\'/%3E%3C/svg%3E') no-repeat 0.5rem center;
+      background-size: 1rem;
     }
     #regionButton {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 1.1rem;
       border: 1px solid #007bff;
       background: white;
       color: #007bff;
       border-radius: 4px;
       cursor: pointer;
-      position: relative;
+    }
+    #regionButton i {
+      margin-right: 0.25rem;
+    }
+    #regionButton::after {
+      content: " সকল শাখা";
     }
     #regionMenu {
       position: absolute;
@@ -99,6 +119,7 @@
       display: none;
       z-index: 100;
       max-height: 300px;
+      min-width: 300px;
       overflow-y: auto;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
